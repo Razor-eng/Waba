@@ -9,6 +9,9 @@ import { Header } from "@/components/shared/Header";
 export const metadata: Metadata = {
   title: "Waba",
   description: "Waba – Streamlining your workflow with grace.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -17,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning suppressContentEditableWarning>
-      <body suppressHydrationWarning suppressContentEditableWarning>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <QueryClientProviderWrapper>
           <TooltipProvider>
             <div className="h-screen flex flex-col bg-background">

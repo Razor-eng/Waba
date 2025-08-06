@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter, usePathname } from "next/navigation";
-import Image from "next/image";
 
 interface SidebarProps {
   className?: string;
@@ -63,8 +62,8 @@ export function Sidebar({ className }: SidebarProps) {
               "w-10 h-10 rounded-lg flex items-center justify-center transition-colors",
               "hover:bg-secondary",
               pathname === item.path
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground"
+                ? "bg-primary hover:bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-primary/20"
             )}
           >
             <item.icon className="w-5 h-5" />

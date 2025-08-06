@@ -1,0 +1,131 @@
+import { Contact, Message } from '@/types';
+
+export const mockContacts: Contact[] = [
+  {
+    id: '1',
+    name: 'Ruben Fernandez',
+    message: 'Hello',
+    timestamp: '08:08 PM',
+    avatar: 'RF',
+    isOnline: true,
+    unreadCount: 1,
+    phone: '+91 XXXXXXXXX',
+    whatsapp: '+91 XXXXXXXXX',
+    optIn: true,
+    additionalInfo: '',
+    iRateValue: 1
+  },
+  {
+    id: '2',
+    name: 'Sudheer Malhotra',
+    message: 'Thank you for contacting',
+    timestamp: '07:30 PM',
+    avatar: 'SM',
+    isOnline: false,
+    phone: '+91 XXXXXXXXX',
+    whatsapp: '+91 XXXXXXXXX',
+    optIn: true
+  },
+  {
+    id: '3',
+    name: 'Rishab Shetty',
+    message: 'Thank you for contacting',
+    timestamp: '07:08 PM',
+    avatar: 'RS',
+    isOnline: false,
+    phone: '+91 XXXXXXXXX',
+    whatsapp: '+91 XXXXXXXXX',
+    optIn: false
+  },
+  {
+    id: '4',
+    name: 'Manisha Pal',
+    message: 'Thank you for contacting',
+    timestamp: '07:03 PM',
+    avatar: 'MP',
+    isOnline: false,
+    phone: '+91 XXXXXXXXX',
+    whatsapp: '+91 XXXXXXXXX',
+    optIn: true
+  },
+  {
+    id: '5',
+    name: 'John Fernandez',
+    message: 'Thank you for contacting',
+    timestamp: '06:44 PM',
+    avatar: 'JF',
+    isOnline: false,
+    tags: ['Enquiry'],
+    phone: '+91 XXXXXXXXX',
+    whatsapp: '+91 XXXXXXXXX',
+    optIn: true
+  },
+  {
+    id: '6',
+    name: 'Harpreet Kaur',
+    message: 'Thank you for contacting',
+    timestamp: '06:42 PM',
+    avatar: 'HK',
+    isOnline: false,
+    phone: '+91 XXXXXXXXX',
+    whatsapp: '+91 XXXXXXXXX',
+    optIn: false
+  },
+  {
+    id: '7',
+    name: 'Jaspreet Bhaati',
+    message: 'Thank you for contacting',
+    timestamp: '06:39 PM',
+    avatar: 'JB',
+    isOnline: false,
+    tags: ['Platinum Customer'],
+    phone: '+91 XXXXXXXXX',
+    whatsapp: '+91 XXXXXXXXX',
+    optIn: true
+  },
+  {
+    id: '8',
+    name: 'Anand Pathak',
+    message: 'Thank you for contacting',
+    timestamp: '06:10 PM',
+    avatar: 'AP',
+    isOnline: false,
+    tags: ['Platinum Customer'],
+    phone: '+91 XXXXXXXXX',
+    whatsapp: '+91 XXXXXXXXX',
+    optIn: true
+  },
+  {
+    id: '9',
+    name: 'Dhruv Rathee',
+    message: 'Thank you for contacting',
+    timestamp: '06:04 PM',
+    avatar: 'DR',
+    isOnline: false,
+    phone: '+91 XXXXXXXXX',
+    whatsapp: '+91 XXXXXXXXX',
+    optIn: false
+  },
+  {
+    id: '10',
+    name: 'Ranveer Singh',
+    message: 'Thank you for contacting',
+    timestamp: '05:57 PM',
+    avatar: 'RS',
+    isOnline: false,
+    phone: '+91 XXXXXXXXX',
+    whatsapp: '+91 XXXXXXXXX',
+    optIn: true
+  }
+];
+
+export const mockMessages: Message[] = [
+  {
+    id: '1',
+    contactId: '1',
+    content: 'Hello',
+    timestamp: '08:08 PM',
+    isFromContact: true,
+    status: 'read'
+  }
+];

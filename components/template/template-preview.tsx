@@ -3,10 +3,10 @@
 import type { MessageTemplate, HeaderFormat } from "@/types";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; // Import Input for the chat bar
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Send } from "lucide-react"; // Import Send icon
+import { Send } from "lucide-react";
 
 interface TemplatePreviewProps {
   template: Partial<MessageTemplate>;
@@ -24,7 +24,6 @@ export default function TemplatePreview({ template }: TemplatePreviewProps) {
     let result = text;
     if (examples && examples.length > 0) {
       examples[0].forEach((example, i) => {
-        // Replace with a span tag for bolding
         result = result.replace(
           new RegExp(`\\{\\{${i + 1}\\}\\}`, "g"),
           `<span class="font-bold">${example}</span>`
@@ -39,12 +38,11 @@ export default function TemplatePreview({ template }: TemplatePreviewProps) {
     text?: string,
     exampleText?: string
   ) => {
-    const content = text
-      ? replaceVariables(text, exampleText ? [[exampleText]] : [])
-      : "Header Text";
     switch (format) {
       case "TEXT":
-        // Use dangerouslySetInnerHTML for header text as well if it contains variables
+        const content = text
+          ? replaceVariables(text, exampleText ? [[exampleText]] : [])
+          : "Header Text";
         return (
           <div
             className="font-semibold text-lg text-center p-2"
@@ -53,20 +51,27 @@ export default function TemplatePreview({ template }: TemplatePreviewProps) {
         );
       case "IMAGE":
         return (
-          <img
-            src={`/placeholder.svg?height=150&width=300&query=${
-              exampleText || "header image"
-            }`}
-            alt="Header preview"
-            className="w-full h-auto object-cover rounded-t-lg"
-          />
+          <div className="relative">
+            <img
+              src={exampleText || "https://via.placeholder.com/300x150"}
+              alt="Header preview"
+              className="w-full h-auto object-cover rounded-t-lg"
+              onError={(e) => {
+                e.currentTarget.src = "https://via.placeholder.com/300x150";
+                e.currentTarget.alt = "Failed to load header image";
+              }}
+            />
+            {!exampleText && (
+              <p className="text-red-500 text-sm text-center mt-2">
+                No image provided. Using placeholder.
+              </p>
+            )}
+          </div>
         );
       case "VIDEO":
         return (
           <video
-            src={`/placeholder.svg?height=150&width=300&query=${
-              exampleText || "header video"
-            }`}
+            src={exampleText || "/placeholder.mp4"}
             controls
             className="w-full p-2"
           >
@@ -76,9 +81,7 @@ export default function TemplatePreview({ template }: TemplatePreviewProps) {
       case "AUDIO":
         return (
           <audio
-            src={`/placeholder.svg?height=50&width=300&query=${
-              exampleText || "header audio"
-            }`}
+            src={exampleText || "/placeholder.mp3"}
             controls
             className="w-full p-2"
           >
@@ -103,16 +106,14 @@ export default function TemplatePreview({ template }: TemplatePreviewProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col" // Added flex-col
+      className="w-full max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col"
     >
       <CardHeader className="bg-green-500 text-white p-3 text-center">
         <CardTitle className="text-lg">WhatsApp Message Preview</CardTitle>
       </CardHeader>
       <CardContent className="p-0 flex-1 flex flex-col justify-end">
-        {" "}
-        {/* Added flex-1 and flex-col justify-end */}
         <div className="bg-gray-100 p-4 min-h-[200px] flex flex-col justify-end">
-          <div className="bg-white rounded-lg p-3 shadow-md max-w-[85%] self-end">
+          <div className="bg-white rounded-lg p-3 shadow-md max-w-[85%] self-end min-h-[100px]">
             {headerComponent &&
               headerComponent.format !== "NONE" &&
               renderHeaderContent(
@@ -136,13 +137,11 @@ export default function TemplatePreview({ template }: TemplatePreviewProps) {
                 {footerComponent.text || "Footer text goes here..."}
               </p>
             )}
-
-            {/* Render Call-to-Action Buttons inside the bubble */}
             {callToActionButtons.length > 0 && (
               <div
                 className={cn(
-                  "flex flex-col border-t border-gray-200 pt-2 mt-2", // Added mt-2 for gap from footer
-                  callToActionButtons.length === 2 && "grid grid-cols-2 gap-1" // Grid for 2 buttons
+                  "flex flex-col border-t border-gray-200 pt-2 mt-2",
+                  callToActionButtons.length === 2 && "grid grid-cols-2 gap-1"
                 )}
               >
                 {callToActionButtons.map((button, index) => (
@@ -156,17 +155,13 @@ export default function TemplatePreview({ template }: TemplatePreviewProps) {
                 ))}
               </div>
             )}
-
-            {/* Render Quick Reply Buttons inside the bubble */}
             {quickReplyButtons.length > 0 && (
               <div className="flex flex-col border-t border-gray-200 pt-2 mt-2">
-                {" "}
-                {/* Added mt-2 for gap from previous content */}
                 {quickReplyButtons.map((button, index) => (
                   <Button
                     key={index}
                     variant="ghost"
-                    className="w-full rounded-md text-blue-600 bg-blue-50/50 hover:bg-blue-100/50 mt-1" // Added mt-1 for gap between quick replies
+                    className="w-full rounded-md text-blue-600 bg-blue-50/50 hover:bg-blue-100/50 mt-1"
                   >
                     {button.text || `Quick Reply ${index + 1}`}
                   </Button>
@@ -176,8 +171,6 @@ export default function TemplatePreview({ template }: TemplatePreviewProps) {
           </div>
         </div>
       </CardContent>
-
-      {/* WhatsApp-like Chat Input Bar */}
       <div className="p-3 border-t border-gray-200 flex items-center gap-2 bg-white">
         <Input
           placeholder="Message"

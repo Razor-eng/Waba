@@ -28,6 +28,8 @@ export default function NewTemplatePage() {
 
   const handleTemplateDataChange = (data: Partial<MessageTemplate>) => {
     setTemplateDataForPreview(data);
+    // Debug log to verify template data
+    console.log("templateDataForPreview:", JSON.stringify(data, null, 2));
   };
 
   return (
@@ -46,7 +48,6 @@ export default function NewTemplatePage() {
             onTemplateDataChange={handleTemplateDataChange}
             currentSection={currentSection}
             setCurrentSection={setCurrentSection}
-            // No initialTemplate prop for new template creation
           />
         </div>
         <div className="lg:w-1/2 p-4 md:p-6 lg:p-8 border-t lg:border-t-0 lg:border-l border-border bg-muted/40 flex items-center justify-center overflow-y-auto">

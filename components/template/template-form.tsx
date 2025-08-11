@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useMemo, useEffect } from "react"
+import type React from "react";
+import { useState, useMemo, useEffect } from "react";
 import type {
   MessageTemplate,
   HeaderFormat,
@@ -9,24 +9,30 @@ import type {
   TemplateCategory,
   TemplateBuilderSection,
   ButtonType,
-} from "@/types"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, X, ChevronLeft, ChevronRight } from "lucide-react"
-import { Separator } from "@/components/ui/separator"
-import { AnimatePresence, motion } from "framer-motion"
+} from "@/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface TemplateFormProps {
-  onSectionChange: (section: TemplateBuilderSection) => void
-  onTemplateDataChange: (data: Partial<MessageTemplate>) => void
-  currentSection: TemplateBuilderSection
-  setCurrentSection: (section: TemplateBuilderSection) => void
-  initialTemplate?: MessageTemplate // Optional prop for editing
+  onSectionChange: (section: TemplateBuilderSection) => void;
+  onTemplateDataChange: (data: Partial<MessageTemplate>) => void;
+  currentSection: TemplateBuilderSection;
+  setCurrentSection: (section: TemplateBuilderSection) => void;
+  initialTemplate?: MessageTemplate;
 }
 
 export default function TemplateForm({
@@ -36,122 +42,141 @@ export default function TemplateForm({
   setCurrentSection,
   initialTemplate,
 }: TemplateFormProps) {
-  const [templateName, setTemplateName] = useState("")
-  const [language, setLanguage] = useState("en_US")
-  const [category, setCategory] = useState<TemplateCategory>("MARKETING")
+  const [templateName, setTemplateName] = useState("");
+  const [language, setLanguage] = useState("en_US");
+  const [category, setCategory] = useState<TemplateCategory>("MARKETING");
+  const [headerFormat, setHeaderFormat] = useState<HeaderFormat>("NONE");
+  const [headerText, setHeaderText] = useState("");
+  const [headerExample, setHeaderExample] = useState("");
+  const [bodyText, setBodyText] = useState("");
+  const [bodyExample, setBodyExample] = useState("");
+  const [footerText, setFooterText] = useState("");
+  const [buttons, setButtons] = useState<ButtonComponent[]>([]);
 
-  const [headerFormat, setHeaderFormat] = useState<HeaderFormat>("NONE")
-  const [headerText, setHeaderText] = useState("")
-  const [headerExample, setHeaderExample] = useState("")
-
-  const [bodyText, setBodyText] = useState("")
-  const [bodyExample, setBodyExample] = useState("")
-
-  const [footerText, setFooterText] = useState("")
-
-  const [buttons, setButtons] = useState<ButtonComponent[]>([])
-
-  // Initialize form state from initialTemplate if provided
   useEffect(() => {
     if (initialTemplate) {
-      setTemplateName(initialTemplate.name)
-      setLanguage(initialTemplate.language)
-      setCategory(initialTemplate.category)
+      setTemplateName(initialTemplate.name);
+      setLanguage(initialTemplate.language);
+      setCategory(initialTemplate.category);
 
-      const header = initialTemplate.components.find((c) => c.type === "HEADER")
+      const header = initialTemplate.components.find(
+        (c) => c.type === "HEADER"
+      );
+
       if (header) {
-        setHeaderFormat(header.format || "NONE")
-        setHeaderText(header.text || "")
-        setHeaderExample(header.example?.header_text?.[0] || "")
+        setHeaderFormat(header.format || "NONE");
+        setHeaderText(header.text || "");
+        setHeaderExample(header.example?.header_text?.[0] || "");
       } else {
-        setHeaderFormat("NONE")
-        setHeaderText("")
-        setHeaderExample("")
+        setHeaderFormat("NONE");
+        setHeaderText("");
+        setHeaderExample("");
       }
 
-      const body = initialTemplate.components.find((c) => c.type === "BODY")
+      const body = initialTemplate.components.find((c) => c.type === "BODY");
       if (body) {
-        setBodyText(body.text || "")
-        setBodyExample(body.example?.body_text?.[0]?.join(", ") || "")
+        setBodyText(body.text || "");
+        setBodyExample(body.example?.body_text?.[0]?.join(", ") || "");
       } else {
-        setBodyText("")
-        setBodyExample("")
+        setBodyText("");
+        setBodyExample("");
       }
 
-      const footer = initialTemplate.components.find((c) => c.type === "FOOTER")
-      setFooterText(footer?.text || "")
+      const footer = initialTemplate.components.find(
+        (c) => c.type === "FOOTER"
+      );
+      setFooterText(footer?.text || "");
 
-      const buttonsComp = initialTemplate.components.find((c) => c.type === "BUTTONS")
-      setButtons(buttonsComp?.buttons || [])
+      const buttonsComp = initialTemplate.components.find(
+        (c) => c.type === "BUTTONS"
+      );
+      setButtons(buttonsComp?.buttons || []);
     } else {
-      // Reset form for new template creation
-      setTemplateName("")
-      setLanguage("en_US")
-      setCategory("MARKETING")
-      setHeaderFormat("NONE")
-      setHeaderText("")
-      setHeaderExample("")
-      setBodyText("")
-      setBodyExample("")
-      setFooterText("")
-      setButtons([])
+      setTemplateName("");
+      setLanguage("en_US");
+      setCategory("MARKETING");
+      setHeaderFormat("NONE");
+      setHeaderText("");
+      setHeaderExample("");
+      setBodyText("");
+      setBodyExample("");
+      setFooterText("");
+      setButtons([]);
     }
-  }, [initialTemplate]) // Depend on initialTemplate to re-initialize
+  }, [initialTemplate]);
 
-  const sections: TemplateBuilderSection[] = ["details", "header", "body", "footer", "buttons"]
-  const currentSectionIndex = sections.indexOf(currentSection)
+  const sections: TemplateBuilderSection[] = [
+    "details",
+    "header",
+    "body",
+    "footer",
+    "buttons",
+  ];
+  const currentSectionIndex = sections.indexOf(currentSection);
 
   const goToNextSection = () => {
-    if (currentSectionIndex < sections.length - 1) {
-      setCurrentSection(sections[currentSectionIndex + 1])
+    if (
+      currentSection === "header" &&
+      headerFormat === "IMAGE" &&
+      !headerExample
+    ) {
+      alert("Please upload an image for the header.");
+      return;
     }
-  }
+    if (currentSectionIndex < sections.length - 1) {
+      setCurrentSection(sections[currentSectionIndex + 1]);
+    }
+  };
 
   const goToPreviousSection = () => {
     if (currentSectionIndex > 0) {
-      setCurrentSection(sections[currentSectionIndex - 1])
+      setCurrentSection(sections[currentSectionIndex - 1]);
     }
-  }
+  };
 
   const generateTemplateObject = (): Partial<MessageTemplate> => {
-    const components: MessageTemplate["components"] = []
+    const components: MessageTemplate["components"] = [];
 
     if (headerFormat !== "NONE") {
       const headerComponent: MessageTemplate["components"][0] = {
         type: "HEADER",
         format: headerFormat,
-      }
+      };
       if (headerFormat === "TEXT") {
-        headerComponent.text = headerText
+        headerComponent.text = headerText;
         if (headerExample) {
-          headerComponent.example = { header_text: [headerExample] }
+          headerComponent.example = { header_text: [headerExample] };
         }
+      } else if (headerFormat === "IMAGE") {
+        headerComponent.example = {
+          header_text: [headerExample || "https://via.placeholder.com/300x150"],
+        };
       } else {
         headerComponent.example = {
           header_text: [`${headerFormat.toLowerCase()} example`],
-        }
+        };
       }
-      components.push(headerComponent)
+      components.push(headerComponent);
     }
 
     if (bodyText) {
       const bodyComponent: MessageTemplate["components"][0] = {
         type: "BODY",
         text: bodyText,
-      }
+      };
       if (bodyExample) {
         bodyComponent.example = {
           body_text: [bodyExample.split(",").map((s) => s.trim())],
-        }
+        };
       }
-      components.push(bodyComponent)
+      components.push(bodyComponent);
     }
 
     if (footerText) {
       components.push({
         type: "FOOTER",
         text: footerText,
-      })
+      });
     }
 
     if (buttons.length > 0) {
@@ -161,15 +186,15 @@ export default function TemplateForm({
           const newBtn: ButtonComponent = {
             type: btn.type,
             text: btn.text,
-          }
+          };
           if (btn.type === "PHONE_NUMBER") {
-            newBtn.phone_number = btn.phone_number
+            newBtn.phone_number = btn.phone_number;
           } else if (btn.type === "URL") {
-            newBtn.url = btn.url
+            newBtn.url = btn.url;
           }
-          return newBtn
+          return newBtn;
         }),
-      })
+      });
     }
 
     return {
@@ -177,8 +202,8 @@ export default function TemplateForm({
       language,
       category,
       components,
-    }
-  }
+    };
+  };
 
   const currentTemplatePreview = useMemo(generateTemplateObject, [
     templateName,
@@ -191,70 +216,82 @@ export default function TemplateForm({
     bodyExample,
     footerText,
     buttons,
-  ])
+  ]);
 
   useEffect(() => {
-    onSectionChange(currentSection)
-  }, [currentSection, onSectionChange])
+    onSectionChange(currentSection);
+  }, [currentSection, onSectionChange]);
 
   useEffect(() => {
-    onTemplateDataChange(currentTemplatePreview)
-  }, [currentTemplatePreview, onTemplateDataChange])
+    onTemplateDataChange(currentTemplatePreview);
+  }, [currentTemplatePreview, onTemplateDataChange]);
 
   const handleAddButton = () => {
     if (buttons.length < 10) {
-      // Max 10 buttons check
-      setButtons([...buttons, { type: "QUICK_REPLY", text: "", phone_number: "", url: "" }])
+      setButtons([
+        ...buttons,
+        { type: "QUICK_REPLY", text: "", phone_number: "", url: "" },
+      ]);
     } else {
-      alert("You can add a maximum of 10 buttons.")
+      alert("You can add a maximum of 10 buttons.");
     }
-  }
+  };
 
   const handleRemoveButton = (index: number) => {
-    setButtons(buttons.filter((_, i) => i !== index))
-  }
+    setButtons(buttons.filter((_, i) => i !== index));
+  };
 
-  const handleButtonChange = (index: number, field: keyof ButtonComponent, value: string) => {
-    const newButtons = [...buttons]
+  const handleButtonChange = (
+    index: number,
+    field: keyof ButtonComponent,
+    value: string
+  ) => {
+    const newButtons = [...buttons];
     // @ts-ignore
-    newButtons[index][field] = value
-    setButtons(newButtons)
-  }
+    newButtons[index][field] = value;
+    setButtons(newButtons);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     const finalTemplate = {
       ...generateTemplateObject(),
-      id: initialTemplate?.id || Date.now().toString(), // Use existing ID or generate new
-      createdAt: initialTemplate?.createdAt || new Date().toISOString(), // Use existing or new timestamp
-    } as MessageTemplate
+      id: initialTemplate?.id || Date.now().toString(),
+      createdAt: initialTemplate?.createdAt || new Date().toISOString(),
+    } as MessageTemplate;
 
     if (initialTemplate) {
-      console.log("Updated Template:", JSON.stringify(finalTemplate, null, 2))
-      alert("Template updated! Check console for JSON output.")
-      // In a real app, you'd send this to your backend API for update
+      console.log("Updated Template:", JSON.stringify(finalTemplate, null, 2));
+      alert("Template updated! Check console for JSON output.");
     } else {
-      console.log("Created Template:", JSON.stringify(finalTemplate, null, 2))
-      alert("Template created! Check console for JSON output.")
-      // In a real app, you'd send this to your backend API for creation
+      console.log("Created Template:", JSON.stringify(finalTemplate, null, 2));
+      alert("Template created! Check console for JSON output.");
     }
-  }
+  };
 
   const cardVariants = {
     hidden: { opacity: 0, x: -50 },
     visible: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: 50 },
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-4 md:p-6 lg:p-8">
       <h1 className="text-2xl font-bold">
-        {initialTemplate ? `Edit Template: ${initialTemplate.name}` : "Create New Message Template"}
+        {initialTemplate
+          ? `Edit Template: ${initialTemplate.name}`
+          : "Create New Message Template"}
       </h1>
 
       <AnimatePresence mode="wait">
         {currentSection === "details" && (
-          <motion.div key="details" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+          <motion.div
+            key="details"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             <Card>
               <CardHeader>
                 <CardTitle>Template Details</CardTitle>
@@ -285,15 +322,24 @@ export default function TemplateForm({
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="category">Category</Label>
-                  <Select value={category} onValueChange={(value: TemplateCategory) => setCategory(value)}>
+                  <Select
+                    value={category}
+                    onValueChange={(value: TemplateCategory) =>
+                      setCategory(value)
+                    }
+                  >
                     <SelectTrigger id="category">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="MARKETING">Marketing</SelectItem>
                       <SelectItem value="UTILITY">Utility</SelectItem>
-                      <SelectItem value="AUTHENTICATION">Authentication</SelectItem>
-                      <SelectItem value="TRANSACTIONAL">Transactional</SelectItem>
+                      <SelectItem value="AUTHENTICATION">
+                        Authentication
+                      </SelectItem>
+                      <SelectItem value="TRANSACTIONAL">
+                        Transactional
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -303,7 +349,13 @@ export default function TemplateForm({
         )}
 
         {currentSection === "header" && (
-          <motion.div key="header" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+          <motion.div
+            key="header"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             <Card>
               <CardHeader>
                 <CardTitle>Header</CardTitle>
@@ -311,7 +363,12 @@ export default function TemplateForm({
               <CardContent className="space-y-4">
                 <RadioGroup
                   value={headerFormat}
-                  onValueChange={(value: HeaderFormat) => setHeaderFormat(value)}
+                  onValueChange={(value: HeaderFormat) => {
+                    setHeaderFormat(value);
+                    if (value === "IMAGE") {
+                      setHeaderExample("");
+                    }
+                  }}
                   className="flex flex-wrap gap-4"
                 >
                   <div className="flex items-center space-x-2">
@@ -348,7 +405,9 @@ export default function TemplateForm({
                     <p className="text-sm text-muted-foreground">
                       Use {"{{1}}"}, {"{{2}}"} for dynamic variables.
                     </p>
-                    <Label htmlFor="headerExample">Header Example (for {"{{1}}"})</Label>
+                    <Label htmlFor="headerExample">
+                      Header Example (for {"{{1}}"})
+                    </Label>
                     <Input
                       id="headerExample"
                       value={headerExample}
@@ -357,24 +416,42 @@ export default function TemplateForm({
                     />
                   </div>
                 )}
-                {(headerFormat === "IMAGE" || headerFormat === "VIDEO" || headerFormat === "AUDIO") && (
+                {(headerFormat === "IMAGE" ||
+                  headerFormat === "VIDEO" ||
+                  headerFormat === "AUDIO") && (
                   <div className="space-y-2">
-                    <Label htmlFor="headerMedia">Upload {headerFormat.toLowerCase()}</Label>
+                    <Label htmlFor="headerMedia">
+                      Upload {headerFormat.toLowerCase()}
+                    </Label>
                     <Input
                       id="headerMedia"
                       type="file"
-                      accept={headerFormat === "IMAGE" ? "image/*" : headerFormat === "VIDEO" ? "video/*" : "audio/*"}
+                      accept={
+                        headerFormat === "IMAGE"
+                          ? "image/*"
+                          : headerFormat === "VIDEO"
+                          ? "video/*"
+                          : "audio/*"
+                      }
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const mediaUrl = URL.createObjectURL(file);
+                          setHeaderExample(mediaUrl);
+                        }
+                      }}
                     />
                     <p className="text-sm text-muted-foreground">
-                      (Placeholder for file upload. In a real app, this would upload and provide a URL.)
+                      (Upload {headerFormat.toLowerCase()} to preview. In a real
+                      app, this would upload to a server.)
                     </p>
-                    <Label htmlFor="headerExample">Header Example (for display)</Label>
-                    <Input
-                      id="headerExample"
-                      value={headerExample}
-                      onChange={(e) => setHeaderExample(e.target.value)}
-                      placeholder={`e.g., ${headerFormat.toLowerCase()} description`}
-                    />
+                    {headerFormat === "IMAGE" && headerExample && (
+                      <img
+                        src={headerExample}
+                        alt="Header preview"
+                        className="w-32 h-auto mt-2 rounded"
+                      />
+                    )}
                   </div>
                 )}
               </CardContent>
@@ -383,7 +460,13 @@ export default function TemplateForm({
         )}
 
         {currentSection === "body" && (
-          <motion.div key="body" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+          <motion.div
+            key="body"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             <Card>
               <CardHeader>
                 <CardTitle>Body</CardTitle>
@@ -401,7 +484,9 @@ export default function TemplateForm({
                 <p className="text-sm text-muted-foreground">
                   Use {"{{1}}"}, {"{{2}}"}, etc. for dynamic variables.
                 </p>
-                <Label htmlFor="bodyExample">Body Example (comma-separated for {"{{1}}, {{2}}"})</Label>
+                <Label htmlFor="bodyExample">
+                  Body Example (comma-separated for {"{{1}}, {{2}}"})
+                </Label>
                 <Input
                   id="bodyExample"
                   value={bodyExample}
@@ -414,7 +499,13 @@ export default function TemplateForm({
         )}
 
         {currentSection === "footer" && (
-          <motion.div key="footer" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+          <motion.div
+            key="footer"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             <Card>
               <CardHeader>
                 <CardTitle>Footer</CardTitle>
@@ -433,22 +524,38 @@ export default function TemplateForm({
         )}
 
         {currentSection === "buttons" && (
-          <motion.div key="buttons" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+          <motion.div
+            key="buttons"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   Buttons ({buttons.length}/10)
-                  <Button type="button" variant="outline" onClick={handleAddButton} disabled={buttons.length >= 10}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleAddButton}
+                    disabled={buttons.length >= 10}
+                  >
                     <Plus className="w-4 h-4 mr-2" /> Add Button
                   </Button>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {buttons.length === 0 && (
-                  <p className="text-muted-foreground text-sm">No buttons added yet. Click "Add Button" to start.</p>
+                  <p className="text-muted-foreground text-sm">
+                    No buttons added yet. Click "Add Button" to start.
+                  </p>
                 )}
                 {buttons.map((button, index) => (
-                  <div key={index} className="border p-4 rounded-md space-y-3 relative">
+                  <div
+                    key={index}
+                    className="border p-4 rounded-md space-y-3 relative"
+                  >
                     <Button
                       type="button"
                       variant="ghost"
@@ -459,30 +566,46 @@ export default function TemplateForm({
                     >
                       <X className="w-4 h-4" />
                     </Button>
-                    <h4 className="font-semibold text-md">Button {index + 1}</h4>
+                    <h4 className="font-semibold text-md">
+                      Button {index + 1}
+                    </h4>
                     <div className="grid gap-2 md:grid-cols-2">
                       <div className="space-y-2">
-                        <Label htmlFor={`button-type-${index}`}>Button Type</Label>
+                        <Label htmlFor={`button-type-${index}`}>
+                          Button Type
+                        </Label>
                         <Select
                           value={button.type}
-                          onValueChange={(value: ButtonType) => handleButtonChange(index, "type", value)}
+                          onValueChange={(value: ButtonType) =>
+                            handleButtonChange(index, "type", value)
+                          }
                         >
                           <SelectTrigger id={`button-type-${index}`}>
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="QUICK_REPLY">Quick Reply</SelectItem>
-                            <SelectItem value="PHONE_NUMBER">Call to Action (Phone)</SelectItem>
-                            <SelectItem value="URL">Call to Action (URL)</SelectItem>
+                            <SelectItem value="QUICK_REPLY">
+                              Quick Reply
+                            </SelectItem>
+                            <SelectItem value="PHONE_NUMBER">
+                              Call to Action (Phone)
+                            </SelectItem>
+                            <SelectItem value="URL">
+                              Call to Action (URL)
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor={`button-text-${index}`}>Button Text</Label>
+                        <Label htmlFor={`button-text-${index}`}>
+                          Button Text
+                        </Label>
                         <Input
                           id={`button-text-${index}`}
                           value={button.text}
-                          onChange={(e) => handleButtonChange(index, "text", e.target.value)}
+                          onChange={(e) =>
+                            handleButtonChange(index, "text", e.target.value)
+                          }
                           placeholder="e.g., Unsubscribe from Promos"
                           required
                         />
@@ -490,11 +613,19 @@ export default function TemplateForm({
                     </div>
                     {button.type === "PHONE_NUMBER" && (
                       <div className="space-y-2">
-                        <Label htmlFor={`button-phone-${index}`}>Phone Number</Label>
+                        <Label htmlFor={`button-phone-${index}`}>
+                          Phone Number
+                        </Label>
                         <Input
                           id={`button-phone-${index}`}
                           value={button.phone_number || ""}
-                          onChange={(e) => handleButtonChange(index, "phone_number", e.target.value)}
+                          onChange={(e) =>
+                            handleButtonChange(
+                              index,
+                              "phone_number",
+                              e.target.value
+                            )
+                          }
                           placeholder="e.g., +15551234567"
                           required
                         />
@@ -506,13 +637,17 @@ export default function TemplateForm({
                         <Input
                           id={`button-url-${index}`}
                           value={button.url || ""}
-                          onChange={(e) => handleButtonChange(index, "url", e.target.value)}
+                          onChange={(e) =>
+                            handleButtonChange(index, "url", e.target.value)
+                          }
                           placeholder="e.g., https://example.com/promo"
                           required
                         />
                       </div>
                     )}
-                    {index < buttons.length - 1 && <Separator className="my-4" />}
+                    {index < buttons.length - 1 && (
+                      <Separator className="my-4" />
+                    )}
                   </div>
                 ))}
               </CardContent>
@@ -522,7 +657,12 @@ export default function TemplateForm({
       </AnimatePresence>
 
       <div className="flex justify-between mt-6">
-        <Button type="button" variant="outline" onClick={goToPreviousSection} disabled={currentSectionIndex === 0}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={goToPreviousSection}
+          disabled={currentSectionIndex === 0}
+        >
           <ChevronLeft className="w-4 h-4 mr-2" /> Previous
         </Button>
         {currentSectionIndex < sections.length - 1 ? (
@@ -530,9 +670,11 @@ export default function TemplateForm({
             Next <ChevronRight className="w-4 h-4 ml-2" />
           </Button>
         ) : (
-          <Button type="submit">{initialTemplate ? "Update Template" : "Create Template"}</Button>
+          <Button type="submit">
+            {initialTemplate ? "Update Template" : "Create Template"}
+          </Button>
         )}
       </div>
     </form>
-  )
+  );
 }

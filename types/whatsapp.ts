@@ -1,3 +1,5 @@
+import { Contact } from "./template";
+
 export interface ErrorResponse {
   success?: boolean;
   message: string;
@@ -32,26 +34,26 @@ export interface GetMessageResponse {
   };
 }
 
-export interface Contact {
-  _id: string;
-  name: string;
-  phone: string;
-  email?: string;
-  last_message?: {
-    message: string;
-    type: string;
-    to: string;
-    from: string;
-    lastConversation: string;
-    bound: string;
-    contactId: string;
-  };
-  last_message_time?: string;
-  seen_status?: boolean;
-  unseen_count_message?: number;
-  createdAt: string;
-  updatedAt: string;
-}
+// export interface Contact {
+//   _id: string;
+//   name: string;
+//   phone: string;
+//   email?: string;
+//   last_message?: {
+//     message: string;
+//     type: string;
+//     to: string;
+//     from: string;
+//     lastConversation: string;
+//     bound: string;
+//     contactId: string;
+//   };
+//   last_message_time?: string;
+//   seen_status?: boolean;
+//   unseen_count_message?: number;
+//   createdAt: string;
+//   updatedAt: string;
+// }
 
 export interface GetAllContactsResponse {
   success?: boolean;

@@ -17,7 +17,7 @@ export default function Breadcrumbs({ items, className }: BreadcrumbsProps) {
     <nav aria-label="Breadcrumb" className={cn("flex", className)}>
       <ol className="flex items-center space-x-1 text-sm text-muted-foreground">
         {items.map((item, index) => (
-          <li key={item.href} className="flex items-center">
+          <li key={index} className="flex items-center">
             <Link
               href={item.href}
               className={cn(

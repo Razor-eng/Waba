@@ -13,6 +13,7 @@ import {
   MessageSquare,
   UserCheck,
   LogOut,
+  LayoutTemplate,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter, usePathname } from "next/navigation";
@@ -23,12 +24,13 @@ interface SidebarProps {
 
 const sidebarItems = [
   { icon: MessageCircle, label: "Chat", path: "/" },
-  { icon: Home, label: "Home", path: "/home" },
-  { icon: Calendar, label: "Calendar", path: "/calendar" },
-  { icon: Ticket, label: "Tickets", path: "/tickets" },
-  { icon: Database, label: "Database", path: "/database" },
-  { icon: BarChart3, label: "Analytics", path: "/analytics" },
-  { icon: MessageSquare, label: "Broadcast", path: "/broadcast" },
+  { icon: LayoutTemplate, label: "Templates", path: "/templates" },
+  // { icon: Home, label: "Home", path: "/home" },
+  // { icon: Calendar, label: "Calendar", path: "/calendar" },
+  // { icon: Ticket, label: "Tickets", path: "/tickets" },
+  // { icon: Database, label: "Database", path: "/database" },
+  // { icon: BarChart3, label: "Analytics", path: "/analytics" },
+  // { icon: MessageSquare, label: "Broadcast", path: "/broadcast" },
   { icon: Users, label: "Teams", path: "/teams" },
   { icon: UserCheck, label: "Contacts", path: "/contacts" },
   { icon: Settings, label: "Settings", path: "/settings" },

@@ -14,7 +14,6 @@ export const mockContacts: Contact[] = [
     isOnline: true,
     unreadCount: 1,
     optIn: true,
-    additionalInfo: "",
     iRateValue: 1,
     lastInteraction: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
   },
@@ -140,6 +139,9 @@ export const mockMessages: Message[] = [
     templateData: {
       id: "1",
       name: "Welcome Message",
+      language: "en_US",
+      category: "MARKETING",
+      createdAt: "2023-10-26T10:00:00Z",
       components: [
         {
           type: "HEADER",
@@ -210,6 +212,9 @@ export const mockMessages: Message[] = [
     templateData: {
       id: "2",
       name: "Order Confirmation",
+      language: "en_US",
+      category: "TRANSACTIONAL",
+      createdAt: "2023-09-15T14:30:00Z",
       components: [
         {
           type: "BODY",
@@ -274,6 +279,9 @@ export const mockMessages: Message[] = [
     templateData: {
       id: "5",
       name: "Password Reset",
+      language: "en_US",
+      category: "AUTHENTICATION",
+      createdAt: "2023-10-20T11:30:00Z",
       components: [
         {
           type: "BODY",
@@ -337,6 +345,9 @@ export const mockMessages: Message[] = [
     templateData: {
       id: "4",
       name: "Appointment Reminder",
+      language: "en_US",
+      category: "UTILITY",
+      createdAt: "2023-10-15T16:00:00Z",
       components: [
         {
           type: "BODY",
@@ -398,6 +409,9 @@ export const mockMessages: Message[] = [
     templateData: {
       id: "6",
       name: "Payment Received",
+      language: "en_US",
+      category: "TRANSACTIONAL",
+      createdAt: "2023-10-22T13:45:00Z",
       components: [
         {
           type: "HEADER",
@@ -504,6 +518,9 @@ export const mockMessages: Message[] = [
     templateData: {
       id: "8",
       name: "Event Invitation",
+      language: "en_US",
+      category: "MARKETING",
+      createdAt: "2023-10-28T14:20:00Z",
       components: [
         {
           type: "HEADER",

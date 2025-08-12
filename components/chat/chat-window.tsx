@@ -43,11 +43,6 @@ export function ChatWindow({
   const [selectedTags, setSelectedTags] = useState<Contact[]>([]);
   const { contacts } = useChat();
 
-  const isInactive = contact
-    ? new Date().getTime() - new Date(contact.lastInteraction).getTime() >
-      24 * 60 * 60 * 1000
-    : false;
-
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -277,6 +272,18 @@ export function ChatWindow({
   const contactMessages = messages.filter(
     (msg) => msg.contactId === contact.id
   );
+
+  const isInactive =
+    contactMessages.length > 0
+      ? new Date().getTime() -
+          new Date(
+            contactMessages[contactMessages.length - 1].createdAt!
+          ).getTime() >
+        24 * 60 * 60 * 1000
+      : contact?.lastInteraction
+      ? new Date().getTime() - new Date(contact.lastInteraction).getTime() >
+        24 * 60 * 60 * 1000
+      : true;
 
   return (
     <>

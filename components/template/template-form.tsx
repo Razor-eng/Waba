@@ -32,7 +32,7 @@ interface TemplateFormProps {
   onTemplateDataChange: (data: Partial<MessageTemplate>) => void;
   currentSection: TemplateBuilderSection;
   setCurrentSection: (section: TemplateBuilderSection) => void;
-  initialTemplate?: MessageTemplate;
+  initialTemplate?: MessageTemplate | null;
 }
 
 export default function TemplateForm({

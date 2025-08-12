@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Breadcrumbs from "@/components/template/breadcrumbs";
 import TemplateForm from "@/components/template/template-form";
-import TemplatePreview from "@/components/template/template-preview";
 import TemplateStepsNav from "@/components/template/template-steps-nav";
 import type { TemplateBuilderSection, MessageTemplate } from "@/types";
+import { TemplatePreview } from "@/components/template/template-preview";
 
 export default function NewTemplatePage() {
   const [currentSection, setCurrentSection] =
@@ -51,7 +51,7 @@ export default function NewTemplatePage() {
           />
         </div>
         <div className="lg:w-1/2 p-4 md:p-6 lg:p-8 border-t lg:border-t-0 lg:border-l border-border bg-muted/40 flex items-center justify-center overflow-y-auto">
-          <TemplatePreview template={templateDataForPreview} />
+          <TemplatePreview templateData={templateDataForPreview} />
         </div>
       </div>
     </div>

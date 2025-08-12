@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { Contact, Message, ChatState } from "@/types";
+import type { Contact, Message, ChatState } from "@/types";
 import { mockContacts, mockMessages } from "@/data/mockData";
 
 export function useChat() {

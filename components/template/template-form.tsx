@@ -47,7 +47,8 @@ export default function TemplateForm({
   const [category, setCategory] = useState<TemplateCategory>("MARKETING");
   const [headerFormat, setHeaderFormat] = useState<HeaderFormat>("NONE");
   const [headerText, setHeaderText] = useState("");
-  const [headerExample, setHeaderExample] = useState("");
+  const [headerTextExample, setHeaderTextExample] = useState("");
+  const [headerMediaUrl, setHeaderMediaUrl] = useState("");
   const [bodyText, setBodyText] = useState("");
   const [bodyExample, setBodyExample] = useState("");
   const [footerText, setFooterText] = useState("");
@@ -65,12 +66,20 @@ export default function TemplateForm({
 
       if (header) {
         setHeaderFormat(header.format || "NONE");
-        setHeaderText(header.text || "");
-        setHeaderExample(header.example?.header_text?.[0] || "");
+        if (header.format === "TEXT") {
+          setHeaderText(header.text || "");
+          setHeaderTextExample(header.example?.header_text?.[0] || "");
+          setHeaderMediaUrl("");
+        } else {
+          setHeaderText("");
+          setHeaderTextExample("");
+          setHeaderMediaUrl(header.example?.header_text?.[0] || "");
+        }
       } else {
         setHeaderFormat("NONE");
         setHeaderText("");
-        setHeaderExample("");
+        setHeaderTextExample("");
+        setHeaderMediaUrl("");
       }
 
       const body = initialTemplate.components.find((c) => c.type === "BODY");
@@ -97,7 +106,8 @@ export default function TemplateForm({
       setCategory("MARKETING");
       setHeaderFormat("NONE");
       setHeaderText("");
-      setHeaderExample("");
+      setHeaderTextExample("");
+      setHeaderMediaUrl("");
       setBodyText("");
       setBodyExample("");
       setFooterText("");
@@ -117,10 +127,11 @@ export default function TemplateForm({
   const goToNextSection = () => {
     if (
       currentSection === "header" &&
-      headerFormat === "IMAGE" &&
-      !headerExample
+      headerFormat !== "NONE" &&
+      headerFormat !== "TEXT" &&
+      !headerMediaUrl
     ) {
-      alert("Please upload an image for the header.");
+      alert(`Please upload a ${headerFormat.toLowerCase()} for the header.`);
       return;
     }
     if (currentSectionIndex < sections.length - 1) {
@@ -144,17 +155,15 @@ export default function TemplateForm({
       };
       if (headerFormat === "TEXT") {
         headerComponent.text = headerText;
-        if (headerExample) {
-          headerComponent.example = { header_text: [headerExample] };
+        if (headerTextExample) {
+          headerComponent.example = { header_text: [headerTextExample] };
         }
-      } else if (headerFormat === "IMAGE") {
-        headerComponent.example = {
-          header_text: [headerExample || "https://via.placeholder.com/300x150"],
-        };
       } else {
-        headerComponent.example = {
-          header_text: [`${headerFormat.toLowerCase()} example`],
-        };
+        if (headerMediaUrl) {
+          headerComponent.example = { header_text: [headerMediaUrl] };
+        } else {
+          headerComponent.example = { header_text: [""] };
+        }
       }
       components.push(headerComponent);
     }
@@ -211,7 +220,8 @@ export default function TemplateForm({
     category,
     headerFormat,
     headerText,
-    headerExample,
+    headerTextExample,
+    headerMediaUrl,
     bodyText,
     bodyExample,
     footerText,
@@ -292,7 +302,7 @@ export default function TemplateForm({
             animate="visible"
             exit="exit"
           >
-            <Card>
+            <Card className="border border-primary/50">
               <CardHeader>
                 <CardTitle>Template Details</CardTitle>
               </CardHeader>
@@ -356,7 +366,7 @@ export default function TemplateForm({
             animate="visible"
             exit="exit"
           >
-            <Card>
+            <Card className="border border-primary/50">
               <CardHeader>
                 <CardTitle>Header</CardTitle>
               </CardHeader>
@@ -365,8 +375,15 @@ export default function TemplateForm({
                   value={headerFormat}
                   onValueChange={(value: HeaderFormat) => {
                     setHeaderFormat(value);
-                    if (value === "IMAGE") {
-                      setHeaderExample("");
+                    if (value === "TEXT") {
+                      setHeaderMediaUrl("");
+                    } else if (value !== "NONE") {
+                      setHeaderText("");
+                      setHeaderTextExample("");
+                    } else {
+                      setHeaderText("");
+                      setHeaderTextExample("");
+                      setHeaderMediaUrl("");
                     }
                   }}
                   className="flex flex-wrap gap-4"
@@ -403,22 +420,20 @@ export default function TemplateForm({
                       placeholder="e.g., Our {{1}} is on!"
                     />
                     <p className="text-sm text-muted-foreground">
-                      Use {"{{1}}"}, {"{{2}}"} for dynamic variables.
+                      Use {"{{1}}"} for dynamic variable (only one allowed).
                     </p>
-                    <Label htmlFor="headerExample">
+                    <Label htmlFor="headerTextExample">
                       Header Example (for {"{{1}}"})
                     </Label>
                     <Input
-                      id="headerExample"
-                      value={headerExample}
-                      onChange={(e) => setHeaderExample(e.target.value)}
+                      id="headerTextExample"
+                      value={headerTextExample}
+                      onChange={(e) => setHeaderTextExample(e.target.value)}
                       placeholder="e.g., Summer Sale"
                     />
                   </div>
                 )}
-                {(headerFormat === "IMAGE" ||
-                  headerFormat === "VIDEO" ||
-                  headerFormat === "AUDIO") && (
+                {headerFormat !== "NONE" && headerFormat !== "TEXT" && (
                   <div className="space-y-2">
                     <Label htmlFor="headerMedia">
                       Upload {headerFormat.toLowerCase()}
@@ -437,7 +452,7 @@ export default function TemplateForm({
                         const file = e.target.files?.[0];
                         if (file) {
                           const mediaUrl = URL.createObjectURL(file);
-                          setHeaderExample(mediaUrl);
+                          setHeaderMediaUrl(mediaUrl);
                         }
                       }}
                     />
@@ -445,11 +460,25 @@ export default function TemplateForm({
                       (Upload {headerFormat.toLowerCase()} to preview. In a real
                       app, this would upload to a server.)
                     </p>
-                    {headerFormat === "IMAGE" && headerExample && (
+                    {headerFormat === "IMAGE" && headerMediaUrl && (
                       <img
-                        src={headerExample}
+                        src={headerMediaUrl}
                         alt="Header preview"
                         className="w-32 h-auto mt-2 rounded"
+                      />
+                    )}
+                    {headerFormat === "VIDEO" && headerMediaUrl && (
+                      <video
+                        src={headerMediaUrl}
+                        className="w-32 h-auto mt-2 rounded"
+                        controls
+                      />
+                    )}
+                    {headerFormat === "AUDIO" && headerMediaUrl && (
+                      <audio
+                        src={headerMediaUrl}
+                        controls
+                        className="w-32 mt-2"
                       />
                     )}
                   </div>
@@ -467,7 +496,7 @@ export default function TemplateForm({
             animate="visible"
             exit="exit"
           >
-            <Card>
+            <Card className="border border-primary/50">
               <CardHeader>
                 <CardTitle>Body</CardTitle>
               </CardHeader>
@@ -506,7 +535,7 @@ export default function TemplateForm({
             animate="visible"
             exit="exit"
           >
-            <Card>
+            <Card className="border border-primary/50">
               <CardHeader>
                 <CardTitle>Footer</CardTitle>
               </CardHeader>
@@ -531,7 +560,7 @@ export default function TemplateForm({
             animate="visible"
             exit="exit"
           >
-            <Card>
+            <Card className="border border-primary/50">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   Buttons ({buttons.length}/10)

@@ -6,6 +6,7 @@ import { Contact } from "@/types";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { Textarea } from "../ui/textarea";
 
 interface ContactDetailsProps {
   contact: Contact | null;
@@ -15,6 +16,8 @@ interface ContactDetailsProps {
 export function ContactDetails({ contact, className }: ContactDetailsProps) {
   const [optIn, setOptIn] = useState(contact?.optIn);
   const [activeTab, setActiveTab] = useState<"details" | "notes">("details");
+  const [newNote, setNewNote] = useState("");
+  const [notes, setNotes] = useState(contact?.notes || []);
 
   if (!contact) {
     return null;
@@ -118,17 +121,39 @@ export function ContactDetails({ contact, className }: ContactDetailsProps) {
         ) : (
           <div>
             <h4 className="font-semibold text-lg mb-2">Notes</h4>
-            {contact.notes && contact.notes.length > 0 ? (
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                {contact.notes.map((note, idx) => (
+            {/* Notes list */}
+            {notes.length > 0 ? (
+              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4">
+                {notes.map((note, idx) => (
                   <li key={idx}>{note}</li>
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground mb-4">
                 No notes available.
               </p>
             )}
+
+            {/* Add note form */}
+            <div className="space-y-2">
+              <Textarea
+                placeholder="Write a note..."
+                value={newNote}
+                onChange={(e) => setNewNote(e.target.value)}
+                className="resize-none"
+              />
+              <Button
+                size="sm"
+                onClick={() => {
+                  if (newNote.trim()) {
+                    setNotes((prev) => [...prev, newNote.trim()]);
+                    setNewNote("");
+                  }
+                }}
+              >
+                Add Note
+              </Button>
+            </div>
           </div>
         )}
       </div>

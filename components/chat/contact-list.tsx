@@ -1,10 +1,12 @@
+"use client";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, Check, X } from "lucide-react";
 import { AvatarInitials } from "@/components/shared/avatar-initials";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Contact } from "@/types";
+import type { Contact } from "@/types";
 import { cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
 
@@ -34,7 +36,7 @@ export function ContactList({
     return contacts.filter(
       (contact) =>
         contact.name.toLowerCase().includes(query) ||
-        contact.message.toLowerCase().includes(query) ||
+        contact.lastMessage?.toLowerCase().includes(query) ||
         contact.tags?.some((tag) => tag.toLowerCase().includes(query))
     );
   }, [contacts, searchQuery]);
@@ -145,7 +147,7 @@ export function ContactList({
                             </div>
 
                             <p className="text-sm text-muted-foreground truncate mt-1">
-                              {contact.message}
+                              {contact.lastMessage}
                             </p>
 
                             {/* Tags */}
@@ -219,33 +221,16 @@ export function ContactList({
                 </div>
 
                 <p className="text-sm text-muted-foreground truncate mt-1">
-                  {contact.message}
+                  {contact.lastMessage}
                 </p>
-
-                {/* Tags */}
-                {/* {contact.tags && contact.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {contact.tags.map((tag) => (
-                      <Badge
-                        key={tag}
-                        variant={
-                          tag === "Platinum Customer" ? "default" : "secondary"
-                        }
-                        className="text-xs"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                )} */}
               </div>
 
               {/* Unread Count */}
-              {contact.unreadCount && contact.unreadCount > 0 && (
+              {contact.unreadCount && contact.unreadCount > 0 ? (
                 <div className="w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs">
                   {contact.unreadCount}
                 </div>
-              )}
+              ) : null}
             </div>
           </motion.div>
         ))}

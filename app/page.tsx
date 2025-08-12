@@ -6,7 +6,7 @@ import { Menu } from "lucide-react";
 import { ContactList } from "@/components/chat/contact-list";
 import { ChatWindow } from "@/components/chat/chat-window";
 import { ContactDetails } from "@/components/chat/contact-details";
-import { useChat } from "@/hooks/useChat";
+import { useChat } from "@/hooks/use-chat";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 

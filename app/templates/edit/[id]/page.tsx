@@ -4,68 +4,10 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Breadcrumbs from "@/components/template/breadcrumbs";
 import TemplateForm from "@/components/template/template-form";
-import TemplatePreview from "@/components/template/template-preview";
 import TemplateStepsNav from "@/components/template/template-steps-nav";
 import type { TemplateBuilderSection, MessageTemplate } from "@/types";
-
-// Mock data for existing templates (should ideally come from an API)
-const mockTemplates: MessageTemplate[] = [
-  {
-    id: "1",
-    name: "seasonal_promotion",
-    language: "en_US",
-    category: "MARKETING",
-    createdAt: "2023-10-26T10:00:00Z",
-    components: [
-      {
-        type: "HEADER",
-        format: "TEXT",
-        text: "Our {{1}} is on!",
-        example: { header_text: ["Summer Sale"] },
-      },
-      {
-        type: "BODY",
-        text: "Shop now through {{1}} and use code {{2}} to get {{3}} off of all merchandise.",
-        example: { body_text: [["the end of August", "25OFF", "25%"]] },
-      },
-      {
-        type: "FOOTER",
-        text: "Use the buttons below to manage your marketing subscriptions",
-      },
-      {
-        type: "BUTTONS",
-        buttons: [
-          { type: "QUICK_REPLY", text: "Unsubscribe from Promos" },
-          { type: "QUICK_REPLY", text: "Unsubscribe from All" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "order_confirmation",
-    language: "en_US",
-    category: "UTILITY",
-    createdAt: "2023-09-15T14:30:00Z",
-    components: [
-      {
-        type: "BODY",
-        text: "Hi {{1}}, your order #{{2}} has been confirmed and will be shipped soon.",
-        example: { body_text: [["John", "12345"]] },
-      },
-      {
-        type: "BUTTONS",
-        buttons: [
-          {
-            type: "URL",
-            text: "Track Order",
-            url: "https://example.com/track",
-          },
-        ],
-      },
-    ],
-  },
-];
+import { mockTemplates } from "@/data/mockData";
+import { TemplatePreview } from "@/components/template/template-preview";
 
 export default function EditTemplatePage() {
   const params = useParams();
@@ -159,7 +101,7 @@ export default function EditTemplatePage() {
           />
         </div>
         <div className="lg:w-1/2 p-4 md:p-6 lg:p-8 border-t lg:border-t-0 lg:border-l border-border bg-muted/40 flex items-center justify-center overflow-y-auto">
-          <TemplatePreview template={templateDataForPreview} />
+          <TemplatePreview templateData={templateDataForPreview} />
         </div>
       </div>
     </div>

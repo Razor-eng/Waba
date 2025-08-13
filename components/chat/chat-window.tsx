@@ -1,11 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Send,
-  Info,
-  Layout,
-} from "lucide-react";
+import { Send, Info, Layout } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { Contact, Message } from "@/types";
@@ -15,8 +11,6 @@ import { AttachmentMenu } from "./attach-menu";
 import { TemplateSelectionModal } from "./template-selection-modal";
 import { TemplateCreationModal } from "./template-creation-modal";
 import { useRef, useState, useEffect } from "react";
-import { useChat } from "@/hooks/use-chat";
-import { TagSelector } from "./tag-selector";
 
 interface ChatWindowProps {
   contact: Contact | null;
@@ -366,24 +360,28 @@ export function ChatWindow({
           {/* Chat Input */}
           <div className="p-4 border-t border-border bg-background shrink-0">
             {isInactive ? (
-              <div className="flex items-center justify-between bg-amber-100 border border-amber-300 px-4 rounded-md">
-                {/* Alert Box */}
-                <div className="flex items-start gap-3 p-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-amber-100 border border-amber-300 px-4 rounded-md">
+                {/* Alert Box - Stacked on mobile, row on larger screens */}
+                <div className="flex items-start gap-3 p-3 sm:p-4 w-full sm:w-auto">
                   <div className="flex-shrink-0">
-                    <Info className="text-amber-700" />
+                    <Info className="text-amber-700 size-4 sm:size-5" />
                   </div>
-                  <div className="text-sm">
-                    <p className="font-medium text-amber-900">
-                      The customer hasn’t spoken to you in the last 24 hours.
+                  <div className="text-sm flex-1">
+                    <p className="font-medium text-amber-900 text-sm sm:text-base">
+                      The customer hasn't spoken to you in the last 24 hours.
                     </p>
-                    <p className="mt-1 text-amber-700 text-xs">
+                    <p className="mt-1 text-amber-700 text-xs sm:text-sm">
                       You can only send pre-approved templates.
                     </p>
                   </div>
                 </div>
-                <Button onClick={() => setShowTemplateSelection(true)}>
-                  <Layout />
-                  Template
+                <Button
+                  onClick={() => setShowTemplateSelection(true)}
+                  size="sm"
+                  className="mb-3 sm:mb-0 ml-0 sm:ml-4 w-full sm:w-auto"
+                >
+                  <Layout className="size-4 mr-1" />
+                  <span>Template</span>
                 </Button>
               </div>
             ) : (

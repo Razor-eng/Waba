@@ -86,11 +86,11 @@ export default function TemplatesListPage() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="p-4 border-b border-primary/40 bg-card flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+        className="p-3 sm:p-4 border-b border-primary/40 bg-card flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
       >
         <Breadcrumbs items={breadcrumbItems} />
         <Link href="/templates/new">
-          <Button className="flex items-center gap-2">
+          <Button className="flex items-center w-full gap-2 h-8 sm:h-10 text-sm sm:text-base">
             <Plus className="w-4 h-4" />
             New Template
           </Button>
@@ -98,8 +98,8 @@ export default function TemplatesListPage() {
       </motion.div>
 
       {/* Search and Filters */}
-      <div className="flex-shrink-0 p-4 sm:p-6 bg-zinc-100 border-b border-primary/40">
-        <div className="space-y-4">
+      <div className="flex-shrink-0 p-3 sm:p-6 bg-zinc-100 border-b border-primary/40">
+        <div className="space-y-3 sm:space-y-4">
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -107,12 +107,12 @@ export default function TemplatesListPage() {
               placeholder="Search templates..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-10 sm:h-11 bg-white border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+              className="pl-10 h-9 sm:h-11 bg-white border-gray-200 focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
             />
           </div>
 
           {/* Categories */}
-          <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
+          <div className="flex flex-wrap gap-2 sm:overflow-x-auto sm:flex-nowrap pb-2 sm:pb-0 scrollbar-hide">
             {categories.map((category) => (
               <Button
                 key={category}
@@ -134,7 +134,7 @@ export default function TemplatesListPage() {
 
       {/* Templates Grid */}
       <div className="flex-1 overflow-y-auto bg-zinc-100">
-        <ScrollArea className="h-full p-4">
+        <ScrollArea className="h-full p-3 sm:p-4">
           <AnimatePresence mode="wait">
             {filteredTemplates.length === 0 ? (
               <motion.div
@@ -143,15 +143,15 @@ export default function TemplatesListPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.3 }}
-                className="flex flex-col items-center justify-center py-16 text-center"
+                className="flex flex-col items-center justify-center py-12 sm:py-16 text-center"
               >
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                  <Search className="w-6 h-6 text-gray-400" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                  <Search className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
                   No templates found
                 </h3>
-                <p className="text-gray-500 text-sm max-w-sm">
+                <p className="text-gray-500 text-xs sm:text-sm max-w-sm">
                   Try adjusting your search criteria or create a new template
                 </p>
               </motion.div>
@@ -161,7 +161,7 @@ export default function TemplatesListPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
-                className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
               >
                 {filteredTemplates.map(
                   (template: MessageTemplate, index: number) => (
@@ -176,22 +176,22 @@ export default function TemplatesListPage() {
                       <Card className="h-full transition-all duration-200 hover:shadow-lg hover:shadow-primary/10 border-primary/10 group-hover:border-primary/20">
                         <CardHeader className="pb-3">
                           <div className="flex items-start justify-between gap-2 mb-2">
-                            <CardTitle className="text-sm font-semibold line-clamp-2 flex-1 text-gray-900">
+                            <CardTitle className="text-sm sm:text-base font-semibold line-clamp-2 flex-1 text-gray-900">
                               {template.name}
                             </CardTitle>
                             <Badge
                               variant="secondary"
-                              className="text-xs flex-shrink-0 bg-gray-100 text-gray-600 group-hover:bg-blue-50 group-hover:text-primary/70"
+                              className="text-xs sm:text-sm flex-shrink-0 bg-gray-100 text-gray-600 group-hover:bg-blue-50 group-hover:text-primary/70"
                             >
                               {template.category.toLowerCase()}
                             </Badge>
                           </div>
-                          <CardDescription className="text-xs text-gray-600">
+                          <CardDescription className="text-xs sm:text-sm text-gray-600">
                             Language: {template.language}
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="pt-0 flex flex-col justify-between flex-1">
-                          <CardDescription className="text-xs line-clamp-3 mb-4 text-gray-600 leading-relaxed">
+                          <CardDescription className="text-xs sm:text-sm line-clamp-3 mb-4 text-gray-600 leading-relaxed">
                             {template.components.find((c) => c.type === "BODY")
                               ?.text
                               ? replaceTemplateVariables(
@@ -207,7 +207,7 @@ export default function TemplatesListPage() {
                           >
                             <Button
                               size="sm"
-                              className="h-8 text-xs font-medium bg-primary/60 hover:bg-primary/70 transition-colors"
+                              className="h-8 sm:h-9 text-xs sm:text-sm font-medium bg-primary/60 hover:bg-primary/70 transition-colors"
                             >
                               <Send className="w-3 h-3 mr-1" />
                               View Template

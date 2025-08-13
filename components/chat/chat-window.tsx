@@ -2,10 +2,7 @@
 
 import { motion } from "framer-motion";
 import {
-  Edit3,
-  UserPlus,
   Send,
-  MoreVertical,
   Info,
   Layout,
 } from "lucide-react";
@@ -40,8 +37,6 @@ export function ChatWindow({
   const [showTemplateSelection, setShowTemplateSelection] = useState(false);
   const [showTemplateCreation, setShowTemplateCreation] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState(null);
-  const [selectedTags, setSelectedTags] = useState<Contact[]>([]);
-  const { contacts } = useChat();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -301,29 +296,6 @@ export function ChatWindow({
         />
 
         <div className="relative z-10 flex flex-col h-full">
-          {/* Chat Header */}
-          <div className="px-4 h-14 flex border-b border-border bg-card">
-            <div className="w-full flex items-center justify-between">
-              <div>
-                <h2 className="font-semibold">{contact.name}</h2>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <TagSelector
-                  contacts={contacts}
-                  selectedTags={selectedTags}
-                  onChange={setSelectedTags}
-                />
-                <Button variant="ghost" size="icon">
-                  <UserPlus className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <MoreVertical className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-
           {/* Messages Area */}
           <div className="relative flex-1 p-4 overflow-y-auto">
             {contactMessages.length === 0 ? (

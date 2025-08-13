@@ -13,9 +13,15 @@ import { Separator } from "@/components/ui/separator";
 import type { MessageTemplate, TemplateBuilderSection } from "@/types";
 import TemplateForm from "@/components/template/template-form";
 import TemplateStepsNav from "@/components/template/template-steps-nav";
-import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, Smartphone, X, ArrowLeft, Send } from "lucide-react";
+import { Eye, Smartphone, Send } from "lucide-react";
 import { TemplatePreview } from "../template/template-preview";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 interface TemplateCreationModalProps {
   isOpen: boolean;
@@ -37,7 +43,7 @@ export function TemplateCreationModal({
   const [templateData, setTemplateData] = useState<Partial<MessageTemplate>>(
     {}
   );
-  const [showPreview, setShowPreview] = useState(false);
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const isInitializing = useRef(false);
 
@@ -67,11 +73,7 @@ export function TemplateCreationModal({
 
   useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth < 1024;
-      setIsMobile(mobile);
-      if (!mobile) {
-        setShowPreview(false);
-      }
+      setIsMobile(window.innerWidth < 768); // Changed to 768px breakpoint
     };
 
     checkMobile();
@@ -124,102 +126,61 @@ export function TemplateCreationModal({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[100vw] max-h-[100vh] w-full h-full lg:max-w-[90vw] lg:max-h-[90vh] lg:w-auto lg:h-auto lg:min-w-[1000px] xl:min-w-[1200px] p-0 gap-0">
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <DialogHeader className="flex-shrink-0 px-4 py-4 lg:px-6 lg:py-5 border-b border-primary/50 bg-white">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                {isMobile && showPreview && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowPreview(false)}
-                    className="p-2"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                  </Button>
-                )}
-                <DialogTitle className="text-lg lg:text-xl font-semibold text-gray-900">
-                  {isMobile && showPreview
-                    ? "Template Preview"
-                    : editingTemplate
-                    ? "Edit Template"
-                    : "Create New Template"}
-                </DialogTitle>
-              </div>
+    <>
+      {/* Main Dialog */}
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-[100vw] h-[100dvh] md:max-w-[80vw] md:max-h-[90vh] md:h-auto md:min-w-[700px] lg:min-h-[75vh] lg:min-w-[900px] p-0 gap-0 border-0 overflow-y-scroll">
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <DialogHeader className="flex-shrink-0 px-4 py-4 md:px-6 md:py-5 border-b border-primary/50 bg-white">
+              <div className="flex items-center justify-between mr-4">
+                <div className="flex items-center gap-3">
+                  <DialogTitle className="text-lg md:text-xl font-semibold text-gray-900">
+                    {editingTemplate ? "Edit Template" : "Create New Template"}
+                  </DialogTitle>
+                </div>
 
-              <div className="flex items-center gap-2">
                 {isMobile && (
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
-                    onClick={() => setShowPreview(!showPreview)}
+                    onClick={() => setShowMobilePreview(true)}
                     className="flex items-center gap-2"
                   >
-                    {showPreview ? (
-                      <>
-                        <EyeOff className="w-4 h-4" />
-                        <span className="hidden sm:inline">Edit</span>
-                      </>
-                    ) : (
-                      <>
-                        <Eye className="w-4 h-4" />
-                        <span className="hidden sm:inline">Preview</span>
-                      </>
-                    )}
+                    <Eye className="w-4 h-4" />
+                    <span className="hidden sm:inline">Preview</span>
                   </Button>
                 )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onClose}
-                  className="lg:hidden p-2"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
               </div>
-            </div>
-          </DialogHeader>
+            </DialogHeader>
 
-          {!isMobile || !showPreview ? (
-            <TemplateStepsNav
-              currentSection={currentSection}
-              onSectionClick={handleSectionChange}
-            />
-          ) : null}
+            {!isMobile && (
+              <TemplateStepsNav
+                currentSection={currentSection}
+                onSectionClick={handleSectionChange}
+              />
+            )}
 
-          {/* Content */}
-          <div className="flex-1 overflow-hidden bg-white">
-            {isMobile ? (
-              <AnimatePresence mode="wait">
-                {showPreview ? (
-                  <motion.div
-                    key="preview"
-                    initial={{ opacity: 0, x: 100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ duration: 0.3 }}
-                    className="h-full"
-                  >
+            {/* Content */}
+            <div className="flex-1 overflow-hidden bg-white">
+              {isMobile ? (
+                <ScrollArea className="h-full">
+                  <div className="p-4">
+                    <TemplateForm
+                      onSectionChange={handleSectionChange}
+                      onTemplateDataChange={handleTemplateDataChange}
+                      currentSection={currentSection}
+                      setCurrentSection={setCurrentSection}
+                      initialTemplate={editingTemplate}
+                      isMobile={isMobile}
+                    />
+                  </div>
+                </ScrollArea>
+              ) : (
+                <div className="flex h-full">
+                  <div className="flex-1 min-w-0">
                     <ScrollArea className="h-full">
                       <div className="p-6">
-                        <TemplatePreview templateData={templateData} />
-                      </div>
-                    </ScrollArea>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="form"
-                    initial={{ opacity: 0, x: -100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 100 }}
-                    transition={{ duration: 0.3 }}
-                    className="h-full"
-                  >
-                    <ScrollArea className="h-full">
-                      <div className="p-4">
                         <TemplateForm
                           onSectionChange={handleSectionChange}
                           onTemplateDataChange={handleTemplateDataChange}
@@ -229,78 +190,86 @@ export function TemplateCreationModal({
                         />
                       </div>
                     </ScrollArea>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            ) : (
-              <div className="flex h-full">
-                <div className="flex-1 min-w-0">
-                  <ScrollArea className="h-full">
-                    <div className="p-6">
-                      <TemplateForm
-                        onSectionChange={handleSectionChange}
-                        onTemplateDataChange={handleTemplateDataChange}
-                        currentSection={currentSection}
-                        setCurrentSection={setCurrentSection}
-                        initialTemplate={editingTemplate}
-                      />
-                    </div>
-                  </ScrollArea>
-                </div>
-
-                <Separator orientation="vertical" />
-
-                <div className="w-96 xl:w-[420px] bg-gradient-to-b from-gray-50 to-gray-100">
-                  <div className="p-4 border-b bg-white/80 backdrop-blur-sm">
-                    <div className="flex items-center justify-center gap-2 text-sm font-medium text-gray-700">
-                      <Smartphone className="w-4 h-4" />
-                      Live Preview
-                    </div>
                   </div>
-                  <ScrollArea className="h-[calc(100%-4rem)]">
-                    <div className="p-6">
-                      <TemplatePreview templateData={templateData} />
-                    </div>
-                  </ScrollArea>
-                </div>
-              </div>
-            )}
-          </div>
 
-          {/* Footer */}
-          <div className="flex-shrink-0 flex flex-col sm:flex-row justify-end gap-3 p-4 lg:p-6 border-t border-primary/50 bg-white">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="w-full sm:w-auto order-2 sm:order-1 bg-transparent"
-            >
-              Cancel
-            </Button>
-            {editingTemplate && onSendTemplate ? (
+                  <Separator orientation="vertical" />
+
+                  <div className="w-80 lg:w-[400px] bg-gradient-to-b from-gray-50 to-gray-100">
+                    <div className="p-4 border-b bg-white/80 backdrop-blur-sm">
+                      <div className="flex items-center justify-center gap-2 text-sm font-medium text-gray-700">
+                        <Smartphone className="w-4 h-4" />
+                        Live Preview
+                      </div>
+                    </div>
+                    <ScrollArea className="h-[calc(100%-4rem)]">
+                      <div className="p-4">
+                        <TemplatePreview templateData={templateData} />
+                      </div>
+                    </ScrollArea>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="flex-shrink-0 flex flex-col sm:flex-row justify-end gap-3 p-4 md:p-6 border-t border-primary/50 bg-white">
               <Button
-                onClick={() => handleTemplateSubmit("send")}
-                className="w-full sm:w-auto order-1 sm:order-2 bg-green-600 hover:bg-green-700"
-                disabled={
-                  !templateData.name || !templateData.components?.length
-                }
+                variant="outline"
+                onClick={onClose}
+                className="w-full sm:w-auto order-2 sm:order-1 bg-transparent"
               >
-                <Send className="w-4 h-4 mr-2" />
-                Send Template
+                Cancel
               </Button>
-            ) : (
-              <Button
-                onClick={() => handleTemplateSubmit("save")}
-                className="w-full sm:w-auto order-1 sm:order-2 bg-primary hover:bg-primary/90"
-                disabled={
-                  !templateData.name || !templateData.components?.length
-                }
-              >
-                Create Template
-              </Button>
-            )}
+              {editingTemplate && onSendTemplate ? (
+                <Button
+                  onClick={() => handleTemplateSubmit("send")}
+                  className="w-full sm:w-auto order-1 sm:order-2 bg-green-600 hover:bg-green-700"
+                  disabled={
+                    !templateData.name || !templateData.components?.length
+                  }
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Send Template
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => handleTemplateSubmit("save")}
+                  className="w-full sm:w-auto order-1 sm:order-2 bg-primary hover:bg-primary/90"
+                  disabled={
+                    !templateData.name || !templateData.components?.length
+                  }
+                >
+                  {editingTemplate ? "Update Template" : "Create Template"}
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      {/* Mobile Preview Sheet */}
+      <Sheet open={showMobilePreview} onOpenChange={setShowMobilePreview}>
+        <SheetContent className="w-full sm:max-w-md p-0">
+          <SheetHeader className="hidden">
+            <SheetTitle />
+            <SheetDescription />
+          </SheetHeader>
+          <div className="flex flex-col h-full">
+            <div className="flex-shrink-0 px-4 py-4 border-b border-primary/50 bg-white">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Template Preview
+                </h2>
+              </div>
+            </div>
+            <ScrollArea className="flex-1">
+              <div className="p-4">
+                <TemplatePreview templateData={templateData} />
+              </div>
+            </ScrollArea>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }

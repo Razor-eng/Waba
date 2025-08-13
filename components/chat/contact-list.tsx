@@ -47,7 +47,7 @@ export function ContactList({
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay: 0.1 }}
       className={cn(
-        "w-80 h-full bg-card border-r border-border flex flex-col",
+        "w-80 h-full border-r border-border flex flex-col bg-white",
         className
       )}
     >
@@ -87,9 +87,9 @@ export function ContactList({
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.95 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-card rounded-md w-full max-w-xl max-h-[80vh] p-4 shadow-lg flex flex-col"
+                className="bg-card rounded-md w-full max-w-xl max-h-[80vh] shadow-lg flex flex-col"
               >
-                <div className="flex items-center space-x-2 mb-4">
+                <div className="flex items-center space-x-2 mb-4 px-4 pt-3">
                   <Input
                     autoFocus
                     placeholder="Search contacts..."
@@ -108,7 +108,7 @@ export function ContactList({
                 </div>
 
                 {/* Filtered Contacts List */}
-                <div className="overflow-y-auto flex-1">
+                <div className="overflow-y-auto flex-1 max-h-96 px-2 border-t border-primary/20">
                   {filteredContacts.length === 0 ? (
                     <p className="text-muted-foreground text-center mt-6">
                       No contacts found.
@@ -149,33 +149,7 @@ export function ContactList({
                             <p className="text-sm text-muted-foreground truncate mt-1">
                               {contact.lastMessage}
                             </p>
-
-                            {/* Tags */}
-                            {contact.tags && contact.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-1 mt-2">
-                                {contact.tags.map((tag) => (
-                                  <Badge
-                                    key={tag}
-                                    variant={
-                                      tag === "Platinum Customer"
-                                        ? "default"
-                                        : "secondary"
-                                    }
-                                    className="text-xs"
-                                  >
-                                    {tag}
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
                           </div>
-
-                          {/* Unread Count */}
-                          {contact.unreadCount && contact.unreadCount > 0 && (
-                            <div className="w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs">
-                              {contact.unreadCount}
-                            </div>
-                          )}
                         </div>
                       </motion.div>
                     ))

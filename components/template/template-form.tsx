@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React from "react";
 import { useState, useMemo, useEffect } from "react";
 import type {
   MessageTemplate,
@@ -33,6 +33,7 @@ interface TemplateFormProps {
   currentSection: TemplateBuilderSection;
   setCurrentSection: (section: TemplateBuilderSection) => void;
   initialTemplate?: MessageTemplate | null;
+  isMobile?: boolean;
 }
 
 export default function TemplateForm({
@@ -41,6 +42,7 @@ export default function TemplateForm({
   currentSection,
   setCurrentSection,
   initialTemplate,
+  isMobile = false,
 }: TemplateFormProps) {
   const [templateName, setTemplateName] = useState("");
   const [language, setLanguage] = useState("en_US");
@@ -286,8 +288,8 @@ export default function TemplateForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 p-4 md:p-6 lg:p-8">
-      <h1 className="text-2xl font-bold">
+    <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 p-2 md:p-4">
+      <h1 className="text-xl md:text-2xl font-bold">
         {initialTemplate
           ? `Edit Template: ${initialTemplate.name}`
           : "Create New Message Template"}
@@ -569,6 +571,7 @@ export default function TemplateForm({
                     variant="outline"
                     onClick={handleAddButton}
                     disabled={buttons.length >= 10}
+                    size={isMobile ? "sm" : "default"}
                   >
                     <Plus className="w-4 h-4 mr-2" /> Add Button
                   </Button>
@@ -583,7 +586,7 @@ export default function TemplateForm({
                 {buttons.map((button, index) => (
                   <div
                     key={index}
-                    className="border p-4 rounded-md space-y-3 relative"
+                    className="border border-primary/40 p-4 rounded-md space-y-3 relative"
                   >
                     <Button
                       type="button"
@@ -685,21 +688,26 @@ export default function TemplateForm({
         )}
       </AnimatePresence>
 
-      <div className="flex justify-between mt-6">
+      <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 mt-6">
         <Button
           type="button"
           variant="outline"
           onClick={goToPreviousSection}
           disabled={currentSectionIndex === 0}
+          className="w-full sm:w-auto"
         >
           <ChevronLeft className="w-4 h-4 mr-2" /> Previous
         </Button>
         {currentSectionIndex < sections.length - 1 ? (
-          <Button type="button" onClick={goToNextSection}>
+          <Button
+            type="button"
+            onClick={goToNextSection}
+            className="w-full sm:w-auto"
+          >
             Next <ChevronRight className="w-4 h-4 ml-2" />
           </Button>
         ) : (
-          <Button type="submit">
+          <Button type="submit" className="w-full sm:w-auto">
             {initialTemplate ? "Update Template" : "Create Template"}
           </Button>
         )}

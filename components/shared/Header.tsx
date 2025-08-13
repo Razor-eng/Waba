@@ -25,7 +25,7 @@ export function Header({ className }: HeaderProps) {
         opacity: { duration: 0.5, delay: 0.3, ease: "easeIn" },
       }}
       className={cn(
-        "w-full h-16 bg-gradient-to-r from-sidebar-bg to-zinc-100 border-b border-border flex items-center justify-between px-6",
+        "w-full h-16 bg-gradient-to-r from-sidebar-bg to-zinc-100 border-b border-border flex items-center justify-between px-4 sm:px-6",
         className
       )}
     >
@@ -38,16 +38,16 @@ export function Header({ className }: HeaderProps) {
         >
           <Image src={"/tick.png"} alt="logo" height={300} width={300} />
         </motion.div>
-        <h2 className="font-bold text-2xl">Waba</h2>
+        <h2 className="font-bold text-xl sm:text-2xl">Waba</h2>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1 sm:gap-3">
         <Button
           variant={"secondary"}
           size={"icon"}
-          className="text-primary bg-white shadow-md"
+          className="text-primary bg-white shadow-md hidden sm:inline-flex"
         >
-          <Lightbulb />
+          <Lightbulb className="size-4 sm:size-5" />
         </Button>
         <Button
           variant={"secondary"}
@@ -55,21 +55,31 @@ export function Header({ className }: HeaderProps) {
           className="text-primary bg-white shadow-md relative"
         >
           <div className="rounded-full bg-destructive size-2.5 absolute right-0 top-0" />
-          <Sparkles />
+          <Sparkles className="size-4 sm:size-5" />
         </Button>
         <Button
           variant={"secondary"}
           size={"icon"}
-          className="text-primary bg-white shadow-md"
+          className="text-primary bg-white shadow-md hidden sm:inline-flex"
         >
-          <GraduationCap />
+          <GraduationCap className="size-4 sm:size-5" />
         </Button>
         <Button
           variant={"secondary"}
-          className="text-primary bg-white shadow-md"
+          size={"sm"}
+          className="text-primary bg-white shadow-md hidden sm:inline-flex"
         >
-          <CircleQuestionMark />
-          Get Help
+          <CircleQuestionMark className="size-4 sm:size-5 mr-1" />
+          <span className="hidden md:inline">Get Help</span>
+        </Button>
+
+        {/* Mobile menu button (you can add functionality later) */}
+        <Button
+          variant={"secondary"}
+          size={"icon"}
+          className="text-primary bg-white shadow-md sm:hidden"
+        >
+          <Lightbulb className="size-4" />
         </Button>
       </div>
     </motion.header>

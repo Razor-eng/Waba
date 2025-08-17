@@ -5,6 +5,8 @@ import { Toaster } from "sonner";
 import { QueryClientProviderWrapper } from "@/providers/query-client-provider";
 import { Sidebar } from "@/components/shared/sidebar";
 import { Header } from "@/components/shared/Header";
+import { ThemeProvider } from "@/providers/theme-provider";
+import { LanguageProvider } from "@/providers/language-provider";
 
 export const metadata: Metadata = {
   title: "Waba",
@@ -23,16 +25,20 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <QueryClientProviderWrapper>
-          <TooltipProvider>
-            <div className="h-screen flex flex-col bg-background">
-              <Header />
-              <div className="flex-1 flex overflow-hidden">
-                <Sidebar />
-                <div className="flex-1">{children}</div>
-              </div>
-            </div>
-            <Toaster />
-          </TooltipProvider>
+          <ThemeProvider>
+            <LanguageProvider>
+              <TooltipProvider>
+                <div className="h-screen flex flex-col bg-background">
+                  <Header />
+                  <div className="flex-1 flex overflow-hidden">
+                    <Sidebar />
+                    <div className="flex-1">{children}</div>
+                  </div>
+                </div>
+                <Toaster />
+              </TooltipProvider>
+            </LanguageProvider>
+          </ThemeProvider>
         </QueryClientProviderWrapper>
       </body>
     </html>

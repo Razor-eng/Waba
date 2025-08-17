@@ -3,17 +3,15 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, Check, X } from "lucide-react";
 import { AvatarInitials } from "@/components/shared/avatar-initials";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Contact } from "@/types";
 import { cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 
 interface ContactListProps {
   contacts: Contact[];
-  selectedContact: Contact | null;
-  onSelectContact: (contact: Contact) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
   className?: string;
@@ -21,13 +19,15 @@ interface ContactListProps {
 
 export function ContactList({
   contacts,
-  selectedContact,
-  onSelectContact,
   searchQuery,
   onSearchChange,
   className,
 }: ContactListProps) {
   const [search, setSearch] = useState(false);
+  const router = useRouter();
+  const params = useParams();
+
+  const currentChatId = params?.id as string;
 
   // Filter contacts based on searchQuery
   const filteredContacts = useMemo(() => {
@@ -35,11 +35,15 @@ export function ContactList({
     if (!query) return [];
     return contacts.filter(
       (contact) =>
-        contact.name.toLowerCase().includes(query) ||
+        contact.fullName.toLowerCase().includes(query) ||
         contact.lastMessage?.toLowerCase().includes(query) ||
         contact.tags?.some((tag) => tag.toLowerCase().includes(query))
     );
   }, [contacts, searchQuery]);
+
+  const handleContactClick = (contact: Contact) => {
+    router.push(`/chat/${contact.id}`);
+  };
 
   return (
     <motion.div
@@ -122,17 +126,18 @@ export function ContactList({
                         transition={{ delay: 0.05 * index }}
                         whileHover={{ backgroundColor: "hsl(var(--muted))" }}
                         onClick={() => {
-                          onSelectContact(contact);
+                          handleContactClick(contact);
                           setSearch(false);
                         }}
                         className={cn(
                           "p-3 border-b border-border cursor-pointer transition-colors rounded-md",
-                          selectedContact?.id === contact.id && "bg-muted"
+                          currentChatId === contact.id &&
+                            "bg-primary/15 border-l-4 border-l-primary"
                         )}
                       >
                         <div className="flex items-start space-x-3">
                           <AvatarInitials
-                            initials={contact.avatar}
+                            name={contact.fullName}
                             isOnline={contact.isOnline}
                           />
 
@@ -169,13 +174,12 @@ export function ContactList({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.05 * index }}
-            whileHover={{ backgroundColor: "hsl(var(--muted))" }}
-            onClick={() => onSelectContact(contact)}
+            onClick={() => handleContactClick(contact)}
             className={cn(
               "p-3 border-b border-border cursor-pointer transition-colors",
-              selectedContact?.id === contact.id
-                ? "bg-primary/20 hover:bg-primary/20"
-                : " hover:bg-primary/10"
+              currentChatId === contact.id
+                ? "bg-primary/15 border-l-4 border-l-primary hover:bg-primary/15"
+                : "hover:bg-primary/5"
             )}
           >
             <div className="flex items-start space-x-3">

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter, usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/use-auth";
 
 interface SidebarProps {
   className?: string;
@@ -25,20 +26,26 @@ interface SidebarProps {
 const sidebarItems = [
   { icon: MessageCircle, label: "Chat", path: "/" },
   { icon: LayoutTemplate, label: "Templates", path: "/templates" },
+  { icon: Users, label: "Teams", path: "/contacts" },
+  { icon: Settings, label: "Settings", path: "/settings" },
   // { icon: Home, label: "Home", path: "/home" },
   // { icon: Calendar, label: "Calendar", path: "/calendar" },
   // { icon: Ticket, label: "Tickets", path: "/tickets" },
   // { icon: Database, label: "Database", path: "/database" },
   // { icon: BarChart3, label: "Analytics", path: "/analytics" },
   // { icon: MessageSquare, label: "Broadcast", path: "/broadcast" },
-  { icon: Users, label: "Teams", path: "/teams" },
-  { icon: UserCheck, label: "Contacts", path: "/contacts" },
-  { icon: Settings, label: "Settings", path: "/settings" },
+  // { icon: UserCheck, label: "Contacts", path: "/contacts" },
 ];
 
 export function Sidebar({ className }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   return (
     <motion.div
@@ -80,7 +87,8 @@ export function Sidebar({ className }: SidebarProps) {
         transition={{ delay: 0.3 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        className="w-10 h-10 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-secondary transition-colors"
+        onClick={handleLogout}
+        className="w-10 h-10 rounded-lg flex items-center justify-center text-red-500 hover:bg-secondary transition-colors"
       >
         <LogOut className="w-5 h-5" />
       </motion.button>

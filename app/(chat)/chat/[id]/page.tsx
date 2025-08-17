@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Menu, MoreVertical, UserPlus } from "lucide-react";
 import { ContactList } from "@/components/chat/contact-list";
@@ -18,9 +19,13 @@ import {
 } from "@/components/ui/sheet";
 import { TagSelector } from "@/components/chat/tag-selector";
 import { cn } from "@/lib/utils";
-import { Contact } from "@/types";
+import type { Contact } from "@/types";
 
-const Index = () => {
+const ChatPage = () => {
+  const params = useParams();
+  const router = useRouter();
+  const contactId = params.id as string;
+
   const [isMobileContactsOpen, setIsMobileContactsOpen] = useState(false);
   const {
     contacts,
@@ -31,26 +36,22 @@ const Index = () => {
     updateSearchQuery,
     sendMessage,
   } = useChat();
-
-  const handleMobileContactSelect = (contact: any) => {
-    selectContact(contact);
-    setIsMobileContactsOpen(false);
-  };
-
   const [selectedTags, setSelectedTags] = useState<Contact[]>([]);
 
-  return (
-    <div className="flex h-full overflow-hidden">
-      {/* Desktop Contact List */}
-      <ContactList
-        contacts={contacts}
-        selectedContact={selectedContact}
-        onSelectContact={selectContact}
-        searchQuery={searchQuery}
-        onSearchChange={updateSearchQuery}
-        className="hidden md:flex"
-      />
+  useEffect(() => {
+    if (contactId && contacts.length > 0) {
+      const contact = contacts.find((c) => c.id === contactId);
+      if (contact && (!selectedContact || selectedContact.id !== contact.id)) {
+        selectContact(contact);
+      } else if (!contact) {
+        // Contact not found, redirect to home
+        router.push("/");
+      }
+    }
+  }, [contactId, contacts, selectedContact, selectContact, router]);
 
+  return (
+    <>
       {/* Chat Header */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
@@ -87,8 +88,6 @@ const Index = () => {
                   <div className="mt-10">
                     <ContactList
                       contacts={contacts}
-                      selectedContact={selectedContact}
-                      onSelectContact={handleMobileContactSelect}
                       searchQuery={searchQuery}
                       onSearchChange={updateSearchQuery}
                     />
@@ -135,8 +134,8 @@ const Index = () => {
       </div>
 
       <ContactDetails contact={selectedContact} className="hidden lg:flex" />
-    </div>
+    </>
   );
 };
 
-export default Index;
+export default ChatPage;

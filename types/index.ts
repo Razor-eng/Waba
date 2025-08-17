@@ -1,21 +1,30 @@
 export interface Contact {
   id: string;
-  name: string;
+  fullName: string;
   phone: string;
-  whatsapp: string;
   email?: string;
+  assignedId: string | null;
+  createdById: string;
+  status: "new" | "in_progress" | "closed";
+  notes?: string;
+  lastContactedAt: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+
+  whatsapp?: string;
   avatar?: string;
   lastMessage?: string;
   lastMessageTime?: string;
   timestamp?: string;
   isOnline?: boolean;
   unreadCount?: number;
-  notes?: string[];
   tags?: string[];
   optIn?: boolean;
   isAssigned?: boolean;
   iRateValue?: number;
-  lastInteraction: Date;
+  lastInteraction?: Date;
   additionalInfo?: string;
 }
 
